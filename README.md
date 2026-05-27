@@ -2,6 +2,8 @@
 
 Where tasks find their groove.
 
+![Kanzo screenshot](assets/kanzo.png)
+
 ## Features
 
 - **Kanban board** with configurable columns — add, rename, color, and **drag-to-reorder** via grip handles
