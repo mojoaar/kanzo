@@ -40,21 +40,8 @@ Kanzo.Sync = (function () {
 
     Kanzo.Toast.show("Pushing to GitHub...", "info");
 
-    // Pre-fetch to populate SHAs (GitHub requires sha for updates)
     return backend
-      .getPeople()
-      .then(function () {
-        return backend.getCategories();
-      })
-      .then(function () {
-        return backend.getTasks();
-      })
-      .then(function () {
-        return backend.getConfig();
-      })
-      .then(function () {
-        return backend.savePeople(people);
-      })
+      .savePeople(people)
       .then(function () {
         return backend.saveCategories(categories);
       })

@@ -190,6 +190,10 @@ window.Kanzo = window.Kanzo || {};
       confirmYes: qs("#confirmYes"),
       toastContainer: qs("#toastContainer"),
       fabAddTask: qs("#fabAddTask"),
+      helpModal: qs("#helpModal"),
+      helpToggle: qs("#helpToggle"),
+      helpClose: qs("#helpClose"),
+      helpCloseFooter: qs("#helpCloseFooter"),
     };
   }
 

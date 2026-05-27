@@ -513,31 +513,62 @@ Kanzo.GitHubBackend.prototype.getPeople = function () {
 
 Kanzo.GitHubBackend.prototype.saveCategories = function (categories) {
   var self = this;
-  var sha = self._shas["categories"] || undefined;
+  // Refetch to get the latest SHA before saving
   return self.client
-    .putFile(self._basePath + "/categories.json", categories, sha)
+    .getFile(self._basePath + "/categories.json")
+    .then(function (data) {
+      var sha = data && data.sha ? data.sha : undefined;
+      return self.client.putFile(
+        self._basePath + "/categories.json",
+        categories,
+        sha,
+      );
+    })
+    .catch(function () {
+      // File doesn't exist yet — create without SHA
+      return self.client.putFile(
+        self._basePath + "/categories.json",
+        categories,
+      );
+    })
     .then(function (resp) {
-      self._shas["categories"] = resp.content.sha;
+      if (resp && resp.content) self._shas["categories"] = resp.content.sha;
     });
 };
 
 Kanzo.GitHubBackend.prototype.saveTasks = function (tasks) {
   var self = this;
-  var sha = self._shas["tasks"] || undefined;
+  // Refetch to get the latest SHA before saving
   return self.client
-    .putFile(self._basePath + "/tasks.json", tasks, sha)
+    .getFile(self._basePath + "/tasks.json")
+    .then(function (data) {
+      var sha = data && data.sha ? data.sha : undefined;
+      return self.client.putFile(self._basePath + "/tasks.json", tasks, sha);
+    })
+    .catch(function () {
+      // File doesn't exist yet — create without SHA
+      return self.client.putFile(self._basePath + "/tasks.json", tasks);
+    })
     .then(function (resp) {
-      self._shas["tasks"] = resp.content.sha;
+      if (resp && resp.content) self._shas["tasks"] = resp.content.sha;
     });
 };
 
 Kanzo.GitHubBackend.prototype.savePeople = function (people) {
   var self = this;
-  var sha = self._shas["people"] || undefined;
+  // Refetch to get the latest SHA before saving
   return self.client
-    .putFile(self._basePath + "/people.json", people, sha)
+    .getFile(self._basePath + "/people.json")
+    .then(function (data) {
+      var sha = data && data.sha ? data.sha : undefined;
+      return self.client.putFile(self._basePath + "/people.json", people, sha);
+    })
+    .catch(function () {
+      // File doesn't exist yet — create without SHA
+      return self.client.putFile(self._basePath + "/people.json", people);
+    })
     .then(function (resp) {
-      self._shas["people"] = resp.content.sha;
+      if (resp && resp.content) self._shas["people"] = resp.content.sha;
     });
 };
 
@@ -557,11 +588,19 @@ Kanzo.GitHubBackend.prototype.getConfig = function () {
 
 Kanzo.GitHubBackend.prototype.saveConfig = function (config) {
   var self = this;
-  var sha = self._shas["config"] || undefined;
+  // Refetch to get the latest SHA before saving
   return self.client
-    .putFile(self._basePath + "/config.json", config, sha)
+    .getFile(self._basePath + "/config.json")
+    .then(function (data) {
+      var sha = data && data.sha ? data.sha : undefined;
+      return self.client.putFile(self._basePath + "/config.json", config, sha);
+    })
+    .catch(function () {
+      // File doesn't exist yet — create without SHA
+      return self.client.putFile(self._basePath + "/config.json", config);
+    })
     .then(function (resp) {
-      self._shas["config"] = resp.content.sha;
+      if (resp && resp.content) self._shas["config"] = resp.content.sha;
     });
 };
 

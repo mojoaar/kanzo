@@ -13,6 +13,8 @@ Kanzo.Modals = (function () {
     bindPersonModalEvents();
     bindColumnConfigEvents();
     bindConfirmEvents();
+    bindHelpEvents();
+    bindKeyboardShortcuts();
   }
 
   function show(el) {
@@ -1050,6 +1052,72 @@ Kanzo.Modals = (function () {
     DOM.confirmMessage.textContent = message;
     _confirmCallback = callback;
     show(DOM.confirmModal);
+  }
+
+  // ===== Help =====
+
+  function bindHelpEvents() {
+    DOM.helpToggle.addEventListener("click", function () {
+      show(DOM.helpModal);
+    });
+
+    DOM.helpClose.addEventListener("click", function () {
+      hide(DOM.helpModal);
+    });
+
+    DOM.helpCloseFooter.addEventListener("click", function () {
+      hide(DOM.helpModal);
+    });
+
+    DOM.helpModal.addEventListener("click", function (e) {
+      if (e.target === DOM.helpModal) hide(DOM.helpModal);
+    });
+  }
+
+  // ===== Keyboard Shortcuts =====
+
+  function bindKeyboardShortcuts() {
+    document.addEventListener("keydown", function (e) {
+      // Ignore when typing in inputs
+      if (
+        e.target.tagName === "INPUT" ||
+        e.target.tagName === "TEXTAREA" ||
+        e.target.tagName === "SELECT" ||
+        e.target.isContentEditable
+      ) {
+        return;
+      }
+
+      var key = e.key.toLowerCase();
+
+      if (key === "n") {
+        e.preventDefault();
+        var boardConfig = Kanzo.Config.getBoardConfig();
+        var firstCol = boardConfig.columns[0];
+        window.showTaskModal(null, firstCol ? firstCol.id : "backlog");
+      } else if (key === "b") {
+        e.preventDefault();
+        Kanzo.Sidebar.toggleDesktop
+          ? Kanzo.Sidebar.toggleDesktop()
+          : document.getElementById("sidebarToggle").click();
+      } else if (key === "d") {
+        e.preventDefault();
+        document.getElementById("themeQuickToggle").click();
+      } else if (key === "/") {
+        e.preventDefault();
+        var searchInput = document.getElementById("searchInput");
+        if (searchInput) searchInput.focus();
+      } else if (key === "?") {
+        e.preventDefault();
+        show(DOM.helpModal);
+      } else if (key === "escape") {
+        // Close any open modal
+        var modals = document.querySelectorAll(".modal-overlay:not(.hidden)");
+        if (modals.length > 0) {
+          hide(modals[modals.length - 1]);
+        }
+      }
+    });
   }
 
   // ===== Public =====

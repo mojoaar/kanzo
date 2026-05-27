@@ -85,6 +85,9 @@
                             ><i data-lucide="moon"></i
                         ></span>
                     </button>
+                    <button class="btn-icon" id="helpToggle" aria-label="Help">
+                        <i data-lucide="help-circle"></i>
+                    </button>
                     <button
                         class="btn-icon"
                         id="settingsToggle"
@@ -594,6 +597,24 @@
                                 >johansen.foo</a
                             >
                         </div>
+                        <p
+                            style="
+                                font-size: 0.65rem;
+                                color: var(--text-faint);
+                                opacity: 0.6;
+                                margin-top: 8px;
+                                margin-bottom: 0;
+                            "
+                        >
+                            Gruvbox palette by
+                            <a
+                                href="https://github.com/sainnhe/gruvbox-material"
+                                target="_blank"
+                                rel="noopener"
+                                style="color: inherit"
+                                >sainnhe/gruvbox-material</a
+                            >
+                        </p>
                         <span
                             style="
                                 font-size: 0.65rem;
@@ -1003,6 +1024,277 @@
                     </button>
                     <button class="btn-danger-filled" id="confirmYes">
                         Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Help Modal -->
+        <div class="modal-overlay hidden" id="helpModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Help &amp; Shortcuts</h2>
+                    <button
+                        class="btn-icon modal-close"
+                        id="helpClose"
+                        aria-label="Close"
+                    >
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body" style="gap: 20px">
+                    <div>
+                        <h3
+                            style="
+                                font-size: 0.85rem;
+                                font-weight: 600;
+                                margin-bottom: 8px;
+                                color: var(--text-muted);
+                                text-transform: uppercase;
+                                letter-spacing: 0.04em;
+                            "
+                        >
+                            Getting Started
+                        </h3>
+                        <ul
+                            style="
+                                font-size: 0.84rem;
+                                color: var(--text);
+                                line-height: 1.8;
+                                padding-left: 18px;
+                            "
+                        >
+                            <li>
+                                Click the <strong>+</strong> button in any
+                                column header to create a task
+                            </li>
+                            <li>
+                                Tap the floating <strong>+</strong> button on
+                                mobile for quick task creation
+                            </li>
+                            <li>
+                                Drag tasks between columns to update their
+                                status
+                            </li>
+                            <li>Click any task to edit its details</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3
+                            style="
+                                font-size: 0.85rem;
+                                font-weight: 600;
+                                margin-bottom: 8px;
+                                color: var(--text-muted);
+                                text-transform: uppercase;
+                                letter-spacing: 0.04em;
+                            "
+                        >
+                            Sidebar
+                        </h3>
+                        <ul
+                            style="
+                                font-size: 0.84rem;
+                                color: var(--text);
+                                line-height: 1.8;
+                                padding-left: 18px;
+                            "
+                        >
+                            <li>
+                                Use the <strong>menu</strong> button to open the
+                                sidebar
+                            </li>
+                            <li>
+                                Click a <strong>category</strong> or
+                                <strong>person</strong> to filter the board
+                            </li>
+                            <li>Click it again to clear the filter</li>
+                            <li>
+                                Toggle the sidebar to
+                                <strong>icon-only</strong> mode for more board
+                                space
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h3
+                            style="
+                                font-size: 0.85rem;
+                                font-weight: 600;
+                                margin-bottom: 8px;
+                                color: var(--text-muted);
+                                text-transform: uppercase;
+                                letter-spacing: 0.04em;
+                            "
+                        >
+                            Keyboard Shortcuts
+                        </h3>
+                        <div
+                            style="
+                                display: flex;
+                                flex-direction: column;
+                                gap: 4px;
+                                font-size: 0.84rem;
+                            "
+                        >
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    padding: 4px 0;
+                                    border-bottom: 1px solid var(--border-light);
+                                "
+                            >
+                                <span>New task</span
+                                ><kbd
+                                    style="
+                                        background: var(--bg-elevated);
+                                        padding: 2px 8px;
+                                        border-radius: var(--radius-sm);
+                                        font-size: 0.75rem;
+                                        border: 1px solid var(--border);
+                                    "
+                                    >N</kbd
+                                >
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    padding: 4px 0;
+                                    border-bottom: 1px solid var(--border-light);
+                                "
+                            >
+                                <span>Toggle sidebar</span
+                                ><kbd
+                                    style="
+                                        background: var(--bg-elevated);
+                                        padding: 2px 8px;
+                                        border-radius: var(--radius-sm);
+                                        font-size: 0.75rem;
+                                        border: 1px solid var(--border);
+                                    "
+                                    >B</kbd
+                                >
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    padding: 4px 0;
+                                    border-bottom: 1px solid var(--border-light);
+                                "
+                            >
+                                <span>Toggle dark/light</span
+                                ><kbd
+                                    style="
+                                        background: var(--bg-elevated);
+                                        padding: 2px 8px;
+                                        border-radius: var(--radius-sm);
+                                        font-size: 0.75rem;
+                                        border: 1px solid var(--border);
+                                    "
+                                    >D</kbd
+                                >
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    padding: 4px 0;
+                                    border-bottom: 1px solid var(--border-light);
+                                "
+                            >
+                                <span>Search</span
+                                ><kbd
+                                    style="
+                                        background: var(--bg-elevated);
+                                        padding: 2px 8px;
+                                        border-radius: var(--radius-sm);
+                                        font-size: 0.75rem;
+                                        border: 1px solid var(--border);
+                                    "
+                                    >/</kbd
+                                >
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    padding: 4px 0;
+                                    border-bottom: 1px solid var(--border-light);
+                                "
+                            >
+                                <span>Close modal / Escape</span
+                                ><kbd
+                                    style="
+                                        background: var(--bg-elevated);
+                                        padding: 2px 8px;
+                                        border-radius: var(--radius-sm);
+                                        font-size: 0.75rem;
+                                        border: 1px solid var(--border);
+                                    "
+                                    >Esc</kbd
+                                >
+                            </div>
+                            <div
+                                style="
+                                    display: flex;
+                                    justify-content: space-between;
+                                    padding: 4px 0;
+                                "
+                            >
+                                <span>Open help</span
+                                ><kbd
+                                    style="
+                                        background: var(--bg-elevated);
+                                        padding: 2px 8px;
+                                        border-radius: var(--radius-sm);
+                                        font-size: 0.75rem;
+                                        border: 1px solid var(--border);
+                                    "
+                                    >?</kbd
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h3
+                            style="
+                                font-size: 0.85rem;
+                                font-weight: 600;
+                                margin-bottom: 8px;
+                                color: var(--text-muted);
+                                text-transform: uppercase;
+                                letter-spacing: 0.04em;
+                            "
+                        >
+                            Sync
+                        </h3>
+                        <ul
+                            style="
+                                font-size: 0.84rem;
+                                color: var(--text);
+                                line-height: 1.8;
+                                padding-left: 18px;
+                            "
+                        >
+                            <li>
+                                Configure <strong>GitHub</strong> storage in
+                                Settings to sync across devices
+                            </li>
+                            <li>
+                                Use the <strong>Sync</strong> button in the
+                                sidebar to push/pull
+                            </li>
+                            <li>Export/import JSON for local backups</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div style="flex: 1"></div>
+                    <button class="btn-primary" id="helpCloseFooter">
+                        Got it
                     </button>
                 </div>
             </div>
