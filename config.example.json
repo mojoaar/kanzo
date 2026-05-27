@@ -1,0 +1,17 @@
+{
+  "_comments": [
+    "Copy this file to config.json and fill in your values.",
+    "githubToken: Fine-grained token at https://github.com/settings/tokens with 'repo' scope",
+    "repo: Repository in owner/name format, e.g. 'mojoaar/kanzo-data'",
+    "branch: Branch name, usually 'main'",
+    "title: Browser tab title override (leave empty for default)",
+    "description: Meta description for SEO/sharing (leave empty for default)",
+    "author: Displayed in the settings footer, e.g. 'Morten Johansen'"
+  ],
+  "githubToken": "",
+  "repo": "",
+  "branch": "main",
+  "title": "",
+  "description": "",
+  "author": ""
+}

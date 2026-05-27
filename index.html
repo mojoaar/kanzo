@@ -1,0 +1,1030 @@
+<!doctype html>
+<html lang="en" data-theme="catppuccin-macchiato" data-mode="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+        />
+        <title>Kanzo — Where tasks find their groove</title>
+        <meta
+            name="description"
+            content="Where tasks find their groove — a kanban task management app"
+        />
+        <meta name="author" content="" />
+        <meta name="theme-color" content="#24273a" />
+        <meta name="robots" content="index, follow" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta
+            name="apple-mobile-web-app-status-bar-style"
+            content="black-translucent"
+        />
+        <meta name="apple-mobile-web-app-title" content="Kanzo" />
+        <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+        <meta property="og:title" content="Kanzo" />
+        <meta
+            property="og:description"
+            content="Where tasks find their groove"
+        />
+        <meta property="og:type" content="website" />
+        <meta property="og:site_name" content="Kanzo" />
+        <meta property="og:locale" content="en_US" />
+        <link rel="canonical" href="https://kanzo.app" />
+        <meta name="twitter:card" content="summary" />
+        <meta name="twitter:title" content="Kanzo" />
+        <meta
+            name="twitter:description"
+            content="Where tasks find their groove"
+        />
+        <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+        <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="192x192"
+            href="favicon-192.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="512x512"
+            href="favicon-512.png"
+        />
+        <link rel="manifest" href="manifest.json" />
+        <link rel="stylesheet" href="css/themes.css" />
+        <link rel="stylesheet" href="css/components.css" />
+    </head>
+    <body>
+        <!-- ========== APP LAYOUT ========== -->
+        <div class="app-layout" id="appLayout">
+            <!-- ===== Header ===== -->
+            <header class="header" id="header">
+                <div class="header-left" id="headerLeft">
+                    <button
+                        class="btn-icon sidebar-toggle"
+                        id="sidebarToggle"
+                        aria-label="Toggle sidebar"
+                    >
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <div class="sidebar-avatar" id="headerAvatar">?</div>
+                    <span class="sidebar-name" id="headerName">Kanzo</span>
+                </div>
+                <div class="header-center">
+                    <span class="header-tagline"
+                        >Where tasks find their groove</span
+                    >
+                </div>
+                <div class="header-right">
+                    <button
+                        class="btn-icon theme-quick-toggle"
+                        id="themeQuickToggle"
+                        aria-label="Toggle dark/light mode"
+                    >
+                        <span class="theme-toggle-icon"
+                            ><i data-lucide="moon"></i
+                        ></span>
+                    </button>
+                    <button
+                        class="btn-icon"
+                        id="settingsToggle"
+                        aria-label="Settings"
+                    >
+                        <i data-lucide="settings"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- ===== App Body ===== -->
+            <div class="app-body" id="appBody">
+                <div class="sidebar-backdrop hidden" id="sidebarBackdrop"></div>
+
+                <!-- ===== Sidebar ===== -->
+                <aside class="sidebar" id="sidebar">
+                    <div class="sidebar-search" id="sidebarSearch">
+                        <div class="search-wrap">
+                            <i data-lucide="search" width="16" height="16"></i>
+                            <input
+                                type="text"
+                                id="searchInput"
+                                placeholder="Search tasks..."
+                                autocomplete="off"
+                            />
+                        </div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header">
+                            <span>Board</span>
+                        </div>
+                        <button class="sidebar-link active" id="sidebarAllLink">
+                            <i data-lucide="kanban"></i>
+                            <span>All Tasks</span>
+                        </button>
+                        <button
+                            class="sidebar-link"
+                            id="sidebarBoardConfigLink"
+                        >
+                            <i data-lucide="layout-panel-top"></i>
+                            <span>Configure Columns</span>
+                        </button>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header">
+                            <span>Categories</span>
+                            <button
+                                class="btn-icon-sm"
+                                id="addCategorySidebar"
+                                aria-label="Add category"
+                            >
+                                <i data-lucide="plus"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="sidebar-categories"
+                            id="sidebarCategories"
+                        ></div>
+                    </div>
+                    <div class="sidebar-section">
+                        <div class="sidebar-section-header">
+                            <span>People</span>
+                            <button
+                                class="btn-icon-sm"
+                                id="addPersonSidebar"
+                                aria-label="Add person"
+                            >
+                                <i data-lucide="plus"></i>
+                            </button>
+                        </div>
+                        <div
+                            class="sidebar-categories"
+                            id="sidebarPeople"
+                        ></div>
+                    </div>
+                    <div class="sidebar-footer">
+                        <button
+                            class="sidebar-sync-btn btn-primary btn-full"
+                            id="sidebarSyncBtn"
+                        >
+                            <i data-lucide="refresh-cw"></i>
+                            <span id="syncLabel">Sync with GitHub</span>
+                        </button>
+                    </div>
+                </aside>
+
+                <!-- ===== Board Area ===== -->
+                <div class="board-area" id="boardArea">
+                    <div class="board-scroll" id="boardScroll"></div>
+                    <div class="board-empty hidden" id="boardEmpty">
+                        <i data-lucide="kanban" width="64" height="64"></i>
+                        <h2>No tasks yet</h2>
+                        <p>
+                            Create your first task to get started. Click the +
+                            button in any column to add a task.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ===== Mobile FAB ===== -->
+                <button class="fab" id="fabAddTask" aria-label="Add task">
+                    <i data-lucide="plus"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- ========== ONBOARDING ========== -->
+        <div class="onboarding hidden" id="onboarding">
+            <div class="onboarding-logo">
+                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
+                    <rect
+                        width="64"
+                        height="64"
+                        rx="14"
+                        fill="var(--bg-elevated)"
+                    />
+                    <path
+                        d="M8 14h20M8 26h20M8 38h20"
+                        stroke="var(--accent)"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    />
+                    <path
+                        d="M36 14h20M36 26h20M36 38h20"
+                        stroke="var(--accent)"
+                        stroke-width="3"
+                        stroke-linecap="round"
+                    />
+                    <path
+                        d="M42 14v24M50 14v24"
+                        stroke="var(--accent)"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-dasharray="0 1"
+                        stroke-opacity="0.3"
+                    />
+                </svg>
+            </div>
+            <h1>Welcome to Kanzo</h1>
+            <p class="onboarding-tagline">Where tasks find their groove</p>
+            <div class="onboarding-form" id="onboardingForm">
+                <div class="form-group">
+                    <label class="form-label" for="onboardingName"
+                        >Your Name</label
+                    >
+                    <input
+                        type="text"
+                        id="onboardingName"
+                        class="form-input"
+                        placeholder="e.g. John Doe"
+                        autocomplete="name"
+                    />
+                </div>
+                <div class="setting-group">
+                    <label class="setting-label">Storage</label>
+                    <div class="radio-group">
+                        <label class="radio-label">
+                            <input
+                                type="radio"
+                                name="onboardingStorage"
+                                value="local"
+                                class="radio-input"
+                                checked
+                            />
+                            <span>Local Storage (this device only)</span>
+                        </label>
+                        <label class="radio-label">
+                            <input
+                                type="radio"
+                                name="onboardingStorage"
+                                value="github"
+                                class="radio-input"
+                            />
+                            <span>GitHub Repository (sync across devices)</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="hidden" id="onboardingGithub">
+                    <div class="form-group">
+                        <label class="form-label" for="onboardingToken"
+                            >GitHub PAT</label
+                        >
+                        <input
+                            type="password"
+                            id="onboardingToken"
+                            class="form-input"
+                            placeholder="ghp_..."
+                        />
+                        <p class="form-hint">
+                            Create a token with <strong>repo</strong> scope at
+                            <a
+                                href="https://github.com/settings/tokens"
+                                target="_blank"
+                                rel="noopener"
+                                >github.com/settings/tokens</a
+                            >
+                        </p>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="onboardingRepo"
+                            >Repository</label
+                        >
+                        <input
+                            type="text"
+                            id="onboardingRepo"
+                            class="form-input"
+                            placeholder="owner/repo-name"
+                        />
+                    </div>
+                </div>
+                <button class="btn-primary btn-full" id="onboardingCreate">
+                    Get Started
+                </button>
+            </div>
+        </div>
+
+        <!-- ========== MODALS ========== -->
+
+        <!-- Settings Modal -->
+        <div class="modal-overlay hidden" id="settingsModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button
+                        class="btn-icon modal-close"
+                        id="settingsClose"
+                        aria-label="Close"
+                    >
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body" id="settingsBody">
+                    <!-- Name & Avatar -->
+                    <div class="setting-group" id="settingsNameSection">
+                        <label class="setting-label" for="settingsName"
+                            >Name</label
+                        >
+                        <input
+                            type="text"
+                            id="settingsName"
+                            class="form-input"
+                            placeholder="Your name"
+                        />
+                    </div>
+                    <div class="setting-group" id="settingsAvatarSection">
+                        <label class="setting-label">Avatar Color</label>
+                        <div class="avatar-colors-grid" id="avatarColors"></div>
+                    </div>
+
+                    <!-- Appearance -->
+                    <div class="setting-group-box">
+                        <div class="setting-group">
+                            <label class="setting-label" for="settingsTheme"
+                                >Theme</label
+                            >
+                            <select id="settingsTheme" class="form-select">
+                                <option value="ayu">Ayu</option>
+                                <option value="catppuccin-frappe">
+                                    Catppuccin Frappé
+                                </option>
+                                <option value="catppuccin-latte">
+                                    Catppuccin Latte
+                                </option>
+                                <option value="catppuccin-macchiato">
+                                    Catppuccin Macchiato
+                                </option>
+                                <option value="catppuccin-mocha">
+                                    Catppuccin Mocha
+                                </option>
+                                <option value="cyberpunk">Cyberpunk</option>
+                                <option value="dracula">Dracula</option>
+                                <option value="github">GitHub</option>
+                                <option value="gruvbox">Gruvbox</option>
+                                <option value="night-owl">Night Owl</option>
+                                <option value="nord">Nord</option>
+                                <option value="onedark">One Dark</option>
+                                <option value="tokyo-night">Tokyo Night</option>
+                            </select>
+                        </div>
+                        <div class="setting-group">
+                            <label class="setting-label">Card Color</label>
+                            <div class="radio-group" id="settingsCardColorMode">
+                                <label class="radio-label">
+                                    <input
+                                        type="radio"
+                                        name="cardColorMode"
+                                        value="priority"
+                                        class="radio-input"
+                                        checked
+                                    />
+                                    <span>Priority</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input
+                                        type="radio"
+                                        name="cardColorMode"
+                                        value="category"
+                                        class="radio-input"
+                                    />
+                                    <span>Category</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Storage -->
+                    <div class="setting-group">
+                        <label class="setting-label">Storage</label>
+                        <div class="radio-group" id="settingsStorageType">
+                            <label class="radio-label">
+                                <input
+                                    type="radio"
+                                    name="storageType"
+                                    value="local"
+                                    class="radio-input"
+                                    checked
+                                />
+                                <span>Local Storage (this device only)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input
+                                    type="radio"
+                                    name="storageType"
+                                    value="github"
+                                    class="radio-input"
+                                />
+                                <span
+                                    >GitHub Repository (sync across
+                                    devices)</span
+                                >
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- GitHub Settings -->
+                    <div class="hidden setting-group-box" id="settingsGithub">
+                        <div class="form-group">
+                            <label class="form-label" for="settingsGithubToken"
+                                >GitHub PAT</label
+                            >
+                            <input
+                                type="password"
+                                id="settingsGithubToken"
+                                class="form-input"
+                                placeholder="ghp_..."
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="settingsGithubRepo"
+                                >Repository</label
+                            >
+                            <input
+                                type="text"
+                                id="settingsGithubRepo"
+                                class="form-input"
+                                placeholder="owner/repo-name"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="settingsGithubBranch"
+                                >Branch</label
+                            >
+                            <input
+                                type="text"
+                                id="settingsGithubBranch"
+                                class="form-input"
+                                placeholder="main"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <button
+                                class="btn-secondary btn-sm"
+                                id="settingsValidateGithub"
+                            >
+                                <i data-lucide="check-circle"></i>
+                                <span>Validate Connection</span>
+                            </button>
+                            <span class="form-hint" id="githubStatus"></span>
+                        </div>
+                        <div class="form-group" id="settingsSyncActions">
+                            <button class="btn-secondary" id="settingsPushBtn">
+                                <i data-lucide="cloud-upload"></i>
+                                <span>Push to GitHub</span>
+                            </button>
+                            <button class="btn-secondary" id="settingsPullBtn">
+                                <i data-lucide="cloud-download"></i>
+                                <span>Pull from GitHub</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Data Import/Export -->
+                    <div class="setting-group">
+                        <label class="setting-label">Data</label>
+                        <div style="display: flex; gap: 8px">
+                            <button
+                                class="btn-secondary btn-full"
+                                id="settingsExportBtn"
+                            >
+                                <i data-lucide="download"></i>
+                                <span>Export</span>
+                            </button>
+                            <button
+                                class="btn-secondary btn-full"
+                                id="settingsImportBtn"
+                            >
+                                <i data-lucide="upload"></i>
+                                <span>Import</span>
+                            </button>
+                        </div>
+                        <input
+                            type="file"
+                            id="settingsImportFile"
+                            accept=".json"
+                            class="hidden"
+                        />
+                    </div>
+
+                    <!-- Danger Zone -->
+                    <div class="setting-group-box">
+                        <h3
+                            style="
+                                color: var(--danger);
+                                font-size: 0.9rem;
+                                font-weight: 600;
+                            "
+                        >
+                            Danger Zone
+                        </h3>
+                        <p style="font-size: 0.78rem; color: var(--text-faint)">
+                            This will permanently delete all your tasks,
+                            categories, and settings.
+                        </p>
+                        <button
+                            class="btn-danger-outline btn-sm"
+                            id="settingsWipeBtn"
+                        >
+                            <i data-lucide="trash-2"></i>
+                            <span>Wipe All Data</span>
+                        </button>
+                        <div class="hidden" id="settingsWipeConfirm">
+                            <p
+                                style="
+                                    font-size: 0.75rem;
+                                    color: var(--danger);
+                                    margin-bottom: 8px;
+                                "
+                            >
+                                Type <strong>DELETE</strong> to confirm:
+                            </p>
+                            <div style="display: flex; gap: 8px">
+                                <input
+                                    type="text"
+                                    id="settingsWipeInput"
+                                    class="form-input"
+                                    placeholder="DELETE"
+                                    style="flex: 1"
+                                />
+                                <button
+                                    class="btn-danger-filled btn-sm"
+                                    id="settingsWipeConfirmBtn"
+                                    disabled
+                                >
+                                    <i data-lucide="alert-triangle"></i> Wipe
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Footer -->
+                    <div
+                        style="
+                            padding-top: 12px;
+                            border-top: 1px solid var(--border);
+                            text-align: center;
+                        "
+                    >
+                        <p
+                            style="
+                                font-size: 0.78rem;
+                                color: var(--text-muted);
+                                margin-bottom: 4px;
+                            "
+                        >
+                            <strong>Kanzo</strong> by
+                            <span id="settingsAuthor">Morten Johansen</span>
+                        </p>
+                        <div
+                            style="
+                                display: flex;
+                                justify-content: center;
+                                gap: 8px;
+                                font-size: 0.72rem;
+                            "
+                        >
+                            <a
+                                href="https://github.com/mojoaar/kanzo"
+                                target="_blank"
+                                rel="noopener"
+                                >GitHub</a
+                            >
+                            <span style="color: var(--border)">·</span>
+                            <a
+                                href="https://johansen.foo"
+                                target="_blank"
+                                rel="noopener"
+                                >johansen.foo</a
+                            >
+                        </div>
+                        <span
+                            style="
+                                font-size: 0.65rem;
+                                color: var(--text-faint);
+                                opacity: 0.6;
+                            "
+                            id="settingsVersion"
+                            >v0.1.0</span
+                        >
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-primary" id="settingsSave">
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Task Modal -->
+        <div class="modal-overlay hidden" id="taskModal">
+            <div class="modal modal-wide">
+                <div class="modal-header">
+                    <h2 id="taskModalTitle">New Task</h2>
+                    <button
+                        class="btn-icon modal-close"
+                        id="taskModalClose"
+                        aria-label="Close"
+                    >
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="taskEditId" value="" />
+                    <div class="form-group">
+                        <label class="form-label" for="taskTitle">Title</label>
+                        <input
+                            type="text"
+                            id="taskTitle"
+                            class="form-input"
+                            placeholder="Task title..."
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="taskDescription"
+                            >Description</label
+                        >
+                        <textarea
+                            id="taskDescription"
+                            class="form-textarea"
+                            placeholder="Description..."
+                        ></textarea>
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 12px">
+                        <div class="form-group" style="flex: 1">
+                            <label class="form-label" for="taskType"
+                                >Type</label
+                            >
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                "
+                            >
+                                <select
+                                    id="taskType"
+                                    class="form-select"
+                                    style="flex: 1"
+                                >
+                                    <option value="task">Task</option>
+                                    <option value="bug">Bug</option>
+                                    <option value="feature">Feature</option>
+                                    <option value="improvement">
+                                        Improvement
+                                    </option>
+                                    <option value="epic">Epic</option>
+                                </select>
+                                <span
+                                    id="taskTypeIcon"
+                                    style="
+                                        width: 16px;
+                                        height: 16px;
+                                        flex-shrink: 0;
+                                        color: var(--text-muted);
+                                    "
+                                ></span>
+                            </div>
+                        </div>
+                        <div class="form-group" style="flex: 1">
+                            <label class="form-label" for="taskPriority"
+                                >Priority</label
+                            >
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                "
+                            >
+                                <select
+                                    id="taskPriority"
+                                    class="form-select"
+                                    style="flex: 1"
+                                ></select>
+                                <span
+                                    id="taskPriorityDot"
+                                    style="
+                                        width: 12px;
+                                        height: 12px;
+                                        border-radius: 50%;
+                                        flex-shrink: 0;
+                                        background: #6c7086;
+                                    "
+                                ></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="taskAssignedTo"
+                            >Assigned To</label
+                        >
+                        <div
+                            style="display: flex; align-items: center; gap: 8px"
+                        >
+                            <select
+                                id="taskAssignedTo"
+                                class="form-select"
+                                style="flex: 1"
+                            >
+                                <option value="">Unassigned</option>
+                            </select>
+                            <span
+                                id="taskAssignedDot"
+                                style="
+                                    width: 22px;
+                                    height: 22px;
+                                    border-radius: 50%;
+                                    flex-shrink: 0;
+                                    background: #6c7086;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: center;
+                                    color: #fff;
+                                "
+                            ></span>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Tags</label>
+                        <div class="tags-wrapper" id="taskTagsWrapper">
+                            <div id="taskTagsChips"></div>
+                            <input
+                                type="text"
+                                class="tag-input"
+                                id="taskTagsInput"
+                                placeholder="Add tag and press Enter..."
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group" style="display: flex; gap: 12px">
+                        <div class="form-group" style="flex: 1">
+                            <label class="form-label" for="taskCategory"
+                                >Category</label
+                            >
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                "
+                            >
+                                <select
+                                    id="taskCategory"
+                                    class="form-select"
+                                    style="flex: 1"
+                                >
+                                    <option value="">None</option>
+                                </select>
+                                <span
+                                    id="taskCategoryDot"
+                                    style="
+                                        width: 22px;
+                                        height: 22px;
+                                        border-radius: 50%;
+                                        flex-shrink: 0;
+                                        background: #6c7086;
+                                        display: flex;
+                                        align-items: center;
+                                        justify-content: center;
+                                        color: #fff;
+                                    "
+                                ></span>
+                            </div>
+                        </div>
+                        <div class="form-group" style="flex: 1">
+                            <label class="form-label" for="taskColumn"
+                                >Column</label
+                            >
+                            <div
+                                style="
+                                    display: flex;
+                                    align-items: center;
+                                    gap: 8px;
+                                "
+                            >
+                                <select
+                                    id="taskColumn"
+                                    class="form-select"
+                                    style="flex: 1"
+                                ></select>
+                                <span
+                                    id="taskColumnDot"
+                                    style="
+                                        width: 12px;
+                                        height: 12px;
+                                        border-radius: 50%;
+                                        flex-shrink: 0;
+                                        background: #6c7086;
+                                    "
+                                ></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        class="btn-secondary btn-danger-outline hidden"
+                        id="taskDeleteBtn"
+                    >
+                        <i data-lucide="trash-2"></i> Delete
+                    </button>
+                    <div style="flex: 1"></div>
+                    <button class="btn-secondary" id="taskModalCancel">
+                        Cancel
+                    </button>
+                    <button class="btn-primary" id="taskModalSave">
+                        Save Task
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Category Modal -->
+        <div class="modal-overlay hidden" id="categoryModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 id="categoryModalTitle">New Category</h2>
+                    <button
+                        class="btn-icon modal-close"
+                        id="categoryModalClose"
+                        aria-label="Close"
+                    >
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="categoryEditId" value="" />
+                    <div class="form-group">
+                        <label class="form-label" for="categoryName"
+                            >Name</label
+                        >
+                        <input
+                            type="text"
+                            id="categoryName"
+                            class="form-input"
+                            placeholder="Category name..."
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <div
+                            class="avatar-colors-grid"
+                            id="categoryColorGrid"
+                        ></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Icon</label>
+                        <div class="icon-grid" id="categoryIconGrid"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        class="btn-secondary btn-danger-outline hidden"
+                        id="categoryDeleteBtn"
+                    >
+                        <i data-lucide="trash-2"></i> Delete
+                    </button>
+                    <div style="flex: 1"></div>
+                    <button class="btn-secondary" id="categoryModalCancel">
+                        Cancel
+                    </button>
+                    <button class="btn-primary" id="categoryModalSave">
+                        Save Category
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Person Modal -->
+        <div class="modal-overlay hidden" id="personModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 id="personModalTitle">New Person</h2>
+                    <button
+                        class="btn-icon modal-close"
+                        id="personModalClose"
+                        aria-label="Close"
+                    >
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="personEditId" value="" />
+                    <div class="form-group">
+                        <label class="form-label" for="personName">Name</label>
+                        <input
+                            type="text"
+                            id="personName"
+                            class="form-input"
+                            placeholder="Person name..."
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Color</label>
+                        <div
+                            class="avatar-colors-grid"
+                            id="personColorGrid"
+                        ></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Icon</label>
+                        <div class="icon-grid" id="personIconGrid"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button
+                        class="btn-secondary btn-danger-outline hidden"
+                        id="personDeleteBtn"
+                    >
+                        <i data-lucide="trash-2"></i> Delete
+                    </button>
+                    <div style="flex: 1"></div>
+                    <button class="btn-secondary" id="personModalCancel">
+                        Cancel
+                    </button>
+                    <button class="btn-primary" id="personModalSave">
+                        Save Person
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Column Config Modal -->
+        <div class="modal-overlay hidden" id="columnConfigModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2>Configure Columns</h2>
+                    <button
+                        class="btn-icon modal-close"
+                        id="columnConfigClose"
+                        aria-label="Close"
+                    >
+                        <i data-lucide="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p style="font-size: 0.82rem; color: var(--text-muted)">
+                        Rename, add, remove, or reorder your board columns.
+                    </p>
+                    <div
+                        class="columns-config-list"
+                        id="columnsConfigList"
+                    ></div>
+                    <button class="btn-secondary btn-sm" id="addColumnBtn">
+                        <i data-lucide="plus"></i> Add Column
+                    </button>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" id="columnConfigCancel">
+                        Cancel
+                    </button>
+                    <button class="btn-primary" id="columnConfigSave">
+                        Save Columns
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Confirm Modal -->
+        <div class="modal-overlay hidden confirm-modal" id="confirmModal">
+            <div class="modal">
+                <div class="modal-header">
+                    <h2 id="confirmTitle">Confirm</h2>
+                </div>
+                <div class="modal-body">
+                    <p
+                        id="confirmMessage"
+                        style="font-size: 0.85rem; color: var(--text-muted)"
+                    >
+                        Are you sure?
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn-secondary" id="confirmCancel">
+                        Cancel
+                    </button>
+                    <button class="btn-danger-filled" id="confirmYes">
+                        Confirm
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Toast Container -->
+        <div class="toast-container" id="toastContainer"></div>
+
+        <!-- ========== SCRIPTS (load order matters) ========== -->
+        <script src="js/config.js"></script>
+        <script src="js/icons.js"></script>
+        <script src="js/configStore.js"></script>
+        <script src="js/utils/dom.js"></script>
+        <script src="js/utils/github.js"></script>
+        <script src="js/storage.js"></script>
+        <script src="js/themes.js"></script>
+        <script src="js/boardStore.js"></script>
+        <script src="js/sync.js"></script>
+        <script src="js/ui/toast.js"></script>
+        <script src="js/ui/modals.js"></script>
+        <script src="js/ui/sidebar.js"></script>
+        <script src="js/ui/board.js"></script>
+        <script src="js/app.js"></script>
+    </body>
+</html>
