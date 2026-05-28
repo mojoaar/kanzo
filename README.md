@@ -96,3 +96,36 @@ MIT
 - [Lucide](https://lucide.dev) — icon library (inline SVG sprite)
 - [Catppuccin](https://catppuccin.com) — theme palette inspiration
 - [sainnhe/gruvbox-material](https://github.com/sainnhe/gruvbox-material) — Gruvbox Material palette
+
+## Changelog
+
+### v0.1.0 — Initial Release
+
+**Features**
+- Kanban board with configurable, drag-to-reorder columns
+- Task management with title, description, type, priority, tags, category, and assignee
+- Live select indicators in task modal (type icon, priority dot, assignee circle, category dot, column dot)
+- People system with custom icons, colors, and names
+- Category system with hundreds of Lucide icons, filterable from sidebar
+- Card color modes — color task borders by priority or category
+- Drag-and-drop between columns (mouse + touch with long-press)
+- Search and sidebar-based category/person filtering
+- Collapsible sidebar (toggle to icon-only 52px mode)
+- 13 themes across dark/light variants: Catppuccin (4 flavors), Nord, One Dark, Tokyo Night, Dracula, GitHub, Gruvbox Material, Ayu, Night Owl, Cyberpunk
+- Dark/light mode toggle
+- IndexedDB storage with in-memory fallback
+- GitHub repository sync — push/pull tasks, categories, people, and board config
+- Silent pull after GitHub onboarding
+- GitHub avatar auto-fetching
+- Onboarding flow for first-time setup
+- Data export/import as JSON
+- Keyboard shortcuts: `N` new task, `B` toggle sidebar, `D` toggle dark mode, `/` focus search, `?` help, `Esc` close modal
+- Help modal with getting started guide and shortcut reference
+- PWA support — manifest, service worker with offline caching, favicons
+- Mobile-responsive layout with scroll-snap columns, FAB, full-screen modals, safe-area awareness
+- Timestamps (`createdAt` / `updatedAt`) on tasks, categories, and people
+
+**Bug Fixes**
+- Card color mode switching now re-renders the board immediately
+- GitHub push handles SHA requirements correctly (re-fetches before each PUT to avoid 409 conflicts)
+- Improved GitHub API error messages
