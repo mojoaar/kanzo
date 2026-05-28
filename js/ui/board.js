@@ -5,6 +5,7 @@ Kanzo.Board = (function () {
 
   var DOM = {};
   var dragTaskId = null;
+  var dragSrcColumn = null;
 
   // Touch drag-and-drop state
   var touchDrag = {
@@ -115,22 +116,42 @@ Kanzo.Board = (function () {
       body.appendChild(card);
     });
 
-    // Mouse drag & drop handlers
+    // Mouse drag & drop handlers on the column body (for empty-column drops)
     body.addEventListener("dragover", function (e) {
       e.preventDefault();
+      // Only highlight body if no card is being hovered
       body.classList.add("drag-over");
     });
-    body.addEventListener("dragleave", function () {
-      body.classList.remove("drag-over");
+    body.addEventListener("dragleave", function (e) {
+      // Don't remove if the leave target is still within the body
+      if (!body.contains(e.relatedTarget)) {
+        body.classList.remove("drag-over");
+      }
     });
     body.addEventListener("drop", function (e) {
       e.preventDefault();
       body.classList.remove("drag-over");
-      if (dragTaskId) {
-        Kanzo.BoardStore.moveTask(dragTaskId, col.id).then(function () {
-          render();
-        });
-        dragTaskId = null;
+      // Only handle drop on body (not on a card — cards handle their own drops)
+      if (!e.target.closest(".task-card")) {
+        if (dragTaskId) {
+          if (dragSrcColumn === col.id) {
+            // Same column — move to end
+            var colTasks = Kanzo.BoardStore.getTasksByColumn(col.id);
+            if (colTasks.length > 0) {
+              var lastOrder = colTasks[colTasks.length - 1].order;
+              Kanzo.BoardStore.reorderTask(dragTaskId, lastOrder + 1);
+              Kanzo.BoardStore.moveTask(dragTaskId, col.id).then(function () {
+                render();
+              });
+            }
+          } else {
+            Kanzo.BoardStore.moveTask(dragTaskId, col.id).then(function () {
+              render();
+            });
+          }
+          dragTaskId = null;
+          dragSrcColumn = null;
+        }
       }
     });
 
@@ -228,36 +249,10 @@ Kanzo.Board = (function () {
       window.showTaskModal(task, col.id);
     });
 
-    // Sort up/down buttons
-    var sortControls = document.createElement("div");
-    sortControls.className = "task-sort-controls";
-    sortControls.innerHTML =
-      '<button class="task-sort-btn task-sort-up" title="Move up"><i data-lucide="chevron-up"></i></button>' +
-      '<button class="task-sort-btn task-sort-down" title="Move down"><i data-lucide="chevron-down"></i></button>';
-
-    sortControls
-      .querySelector(".task-sort-up")
-      .addEventListener("click", function (e) {
-        e.stopPropagation();
-        Kanzo.BoardStore.moveTaskUp(task.id).then(function () {
-          render();
-        });
-      });
-
-    sortControls
-      .querySelector(".task-sort-down")
-      .addEventListener("click", function (e) {
-        e.stopPropagation();
-        Kanzo.BoardStore.moveTaskDown(task.id).then(function () {
-          render();
-        });
-      });
-
-    card.appendChild(sortControls);
-
     // Mouse drag events
     card.addEventListener("dragstart", function (e) {
       dragTaskId = task.id;
+      dragSrcColumn = col.id;
       e.dataTransfer.setData("text/plain", col.id);
       e.dataTransfer.effectAllowed = "move";
       card.classList.add("dragging");
@@ -265,7 +260,97 @@ Kanzo.Board = (function () {
 
     card.addEventListener("dragend", function () {
       card.classList.remove("dragging");
+      // Remove all card drag-over highlights
+      document.querySelectorAll(".task-card.drag-over").forEach(function (el) {
+        el.classList.remove("drag-over");
+      });
       dragTaskId = null;
+      dragSrcColumn = null;
+    });
+
+    // Per-card drag/drop for within-column reordering
+    card.addEventListener("dragover", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      e.dataTransfer.dropEffect = "move";
+    });
+
+    card.addEventListener("dragenter", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      if (dragTaskId && dragTaskId !== task.id && dragSrcColumn === col.id) {
+        card.classList.add("drag-over");
+      }
+    });
+
+    card.addEventListener("dragleave", function (e) {
+      if (!card.contains(e.relatedTarget)) {
+        card.classList.remove("drag-over");
+      }
+    });
+
+    card.addEventListener("drop", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      card.classList.remove("drag-over");
+
+      if (!dragTaskId || dragTaskId === task.id) return;
+
+      if (dragSrcColumn === col.id) {
+        // Same column — reorder by swapping order values
+        var colTasks = Kanzo.BoardStore.getTasksByColumn(col.id);
+        var srcIdx = colTasks.findIndex(function (t) {
+          return t.id === dragTaskId;
+        });
+        var targetIdx = colTasks.findIndex(function (t) {
+          return t.id === task.id;
+        });
+
+        if (srcIdx === -1 || targetIdx === -1) return;
+
+        // Shift other tasks' orders around
+        var draggedOrder = colTasks[srcIdx].order;
+        if (srcIdx < targetIdx) {
+          // Moving down: shift tasks between src+1 and target up by one
+          for (var i = srcIdx + 1; i <= targetIdx; i++) {
+            var nextOrder = colTasks[i].order;
+            colTasks[i].order = draggedOrder;
+            draggedOrder = nextOrder;
+          }
+          colTasks[srcIdx].order = draggedOrder;
+        } else {
+          // Moving up: shift tasks between target and src-1 down by one
+          for (var j = srcIdx - 1; j >= targetIdx; j--) {
+            var prevOrder = colTasks[j].order;
+            colTasks[j].order = draggedOrder;
+            draggedOrder = prevOrder;
+          }
+          colTasks[srcIdx].order = draggedOrder;
+        }
+
+        // Persist all affected tasks via BoardStore
+        var saves = [];
+        for (
+          var k = Math.min(srcIdx, targetIdx);
+          k <= Math.max(srcIdx, targetIdx);
+          k++
+        ) {
+          saves.push(
+            Kanzo.BoardStore.reorderTask(colTasks[k].id, colTasks[k].order),
+          );
+        }
+        Promise.all(saves).then(function () {
+          render();
+        });
+      } else {
+        // Cross-column move
+        Kanzo.BoardStore.moveTask(dragTaskId, col.id).then(function () {
+          render();
+        });
+      }
+
+      dragTaskId = null;
+      dragSrcColumn = null;
     });
 
     // Touch drag-and-drop events
