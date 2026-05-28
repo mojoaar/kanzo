@@ -160,6 +160,44 @@ Kanzo.BoardStore = (function () {
     return backend.saveTask(_tasks[idx]);
   }
 
+  function moveTaskUp(taskId) {
+    var task = _tasks.find(function (t) {
+      return t.id === taskId;
+    });
+    if (!task) return Promise.resolve();
+    var colTasks = getFilteredTasks(task.column);
+    var idx = colTasks.findIndex(function (t) {
+      return t.id === taskId;
+    });
+    if (idx <= 0) return Promise.resolve();
+    var above = colTasks[idx - 1];
+    var tmp = task.order;
+    task.order = above.order;
+    task.updatedAt = new Date().toISOString();
+    above.order = tmp;
+    above.updatedAt = new Date().toISOString();
+    return Promise.all([backend.saveTask(task), backend.saveTask(above)]);
+  }
+
+  function moveTaskDown(taskId) {
+    var task = _tasks.find(function (t) {
+      return t.id === taskId;
+    });
+    if (!task) return Promise.resolve();
+    var colTasks = getFilteredTasks(task.column);
+    var idx = colTasks.findIndex(function (t) {
+      return t.id === taskId;
+    });
+    if (idx < 0 || idx >= colTasks.length - 1) return Promise.resolve();
+    var below = colTasks[idx + 1];
+    var tmp = task.order;
+    task.order = below.order;
+    task.updatedAt = new Date().toISOString();
+    below.order = tmp;
+    below.updatedAt = new Date().toISOString();
+    return Promise.all([backend.saveTask(task), backend.saveTask(below)]);
+  }
+
   function deleteTask(id) {
     _tasks = _tasks.filter(function (t) {
       return t.id !== id;
@@ -355,6 +393,8 @@ Kanzo.BoardStore = (function () {
     updateTask: updateTask,
     moveTask: moveTask,
     reorderTask: reorderTask,
+    moveTaskUp: moveTaskUp,
+    moveTaskDown: moveTaskDown,
     deleteTask: deleteTask,
     createCategory: createCategory,
     updateCategory: updateCategory,

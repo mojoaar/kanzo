@@ -228,6 +228,33 @@ Kanzo.Board = (function () {
       window.showTaskModal(task, col.id);
     });
 
+    // Sort up/down buttons
+    var sortControls = document.createElement("div");
+    sortControls.className = "task-sort-controls";
+    sortControls.innerHTML =
+      '<button class="task-sort-btn task-sort-up" title="Move up"><i data-lucide="chevron-up"></i></button>' +
+      '<button class="task-sort-btn task-sort-down" title="Move down"><i data-lucide="chevron-down"></i></button>';
+
+    sortControls
+      .querySelector(".task-sort-up")
+      .addEventListener("click", function (e) {
+        e.stopPropagation();
+        Kanzo.BoardStore.moveTaskUp(task.id).then(function () {
+          render();
+        });
+      });
+
+    sortControls
+      .querySelector(".task-sort-down")
+      .addEventListener("click", function (e) {
+        e.stopPropagation();
+        Kanzo.BoardStore.moveTaskDown(task.id).then(function () {
+          render();
+        });
+      });
+
+    card.appendChild(sortControls);
+
     // Mouse drag events
     card.addEventListener("dragstart", function (e) {
       dragTaskId = task.id;
